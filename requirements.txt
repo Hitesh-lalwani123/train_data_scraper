@@ -1,0 +1,4 @@
+selenium==4.19.0
+pymongo==4.7.1
+pytz==2025.2
+python-dotenv==1.0.1

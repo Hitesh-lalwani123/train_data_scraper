@@ -1,0 +1,6 @@
+output.txt
+venv/
+test.py
+test.txt
+__pycache__
+.env
