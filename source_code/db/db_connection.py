@@ -1,13 +1,16 @@
 from pymongo import MongoClient
-from datetime import datetime
-from dotenv import load_dotenv
 import os
-
-load_dotenv()
 # Replace with your MongoDB Atlas connection string
+from dotenv import load_dotenv
+load_dotenv()
+db_name = os.getenv("DB")
+collection_name = os.getenv("COLLECTION")
+username = os.getenv("MONGO_USER")
+password = os.getenv("MONGO_PWD")
+from datetime import datetime
 
-username = os.getenv("MONGO_PWD")
-password = os.getenv("MONGO_USER")
+
+
 def create_connection():
     client = MongoClient(f"mongodb+srv://{username}:{password}@cluster0.wsh3nhc.mongodb.net/?retryWrites=true&w=majority&appName=cluster0")
     # Select database and collection

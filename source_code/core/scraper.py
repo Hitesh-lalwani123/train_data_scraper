@@ -11,11 +11,11 @@ options.add_argument('--disable-gpu')
 options.add_argument('--no-sandbox')
 options.add_argument('--window-size=1920,1080')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
-from db_connection import create_connection,insert_data,close_connection,clear_collection,clear_entry,update_progress
+from source_code.db.db_connection import create_connection,insert_data,close_connection,clear_entry,update_progress
 import tkinter as tk
 import time
-from constants import stations,FARE_CLASS,dates
-from util import expected_time
+from source_code.utils.constants import stations,FARE_CLASS,dates
+from source_code.utils.util import expected_time
 
 
 def is_time_between_1145pm_and_1215am_ist():
@@ -121,7 +121,10 @@ def run_scraper(date_list = dates):
                     percent = (((records_processed + 1) / total_calls) * 100)
                     records_processed += 1
                     print("Progress: ",percent)
-                    update_progress(client,percent)
+                    try:
+                        update_progress(client,percent)
+                    except Exception as e:
+                        raise e
                 
                     for train in result_list:
                         train_number = train['train_number']
@@ -137,7 +140,9 @@ def run_scraper(date_list = dates):
                     raise e
         try:       
             data = {curr_date: train_data}
+            print("error in db")
             deleted_date= clear_entry(client,curr_date)
+            
             object_id = insert_data(data,client)
         except Exception as e:
             raise e
