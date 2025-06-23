@@ -2,9 +2,7 @@
 
 ### Quick setup guide:
 1. clone project
-2. run python -m venv venv
-3. source venv/Script/activate
-4. pip install -r requirements.txt
+2. run sh installer_script.sh
 
 ### Available apis
 1. `/api/v1/scraper` -> Takes a date as an input and starts scraping data.
