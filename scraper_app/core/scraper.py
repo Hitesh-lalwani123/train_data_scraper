@@ -18,7 +18,6 @@ from scraper_app import SCRAPER_URL
 
 if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
-    exit(1)
 
 def run_scraper(date_list = dates):
     try:
