@@ -103,8 +103,6 @@ def run_scraper(date_list = dates):
                 try:
                     trains = get_train_info(stations[p1],stations[p2],date=curr_date)
                     # time.sleep(2)
-                    print(stations[p1],stations[p2])
-                    print(trains)
                    
                     result_list = generate_data(trains)
                     percent = (((records_processed + 1) / total_calls) * 100)
