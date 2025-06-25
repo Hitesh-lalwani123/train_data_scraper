@@ -13,4 +13,7 @@ def get_progress_from_db():
     progress = get_progress(client)
     close_connection(client=client)
     return progress
+@app.get("/")
+def health_check():
+    return {"msg":"Scraper apis running fine"}
     
