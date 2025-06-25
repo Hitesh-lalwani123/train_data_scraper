@@ -1,24 +1,24 @@
 stations = [
-    "SBC",  
-    "RC",  
-    "GTL",    
-    "DHNE",   
-    "KRNT",   
-    "YG",     
+    # "SBC",  
+    # "RC",  
+    # "GTL",    
+    # "DHNE",   
+    # "KRNT",   
+    # "YG",     
     "MBNR",   
     "SEM",    
     "SC",     
-    "KZJ",    
-    "RDM",    
-    "SKZR",   
-    "BPQ",    
+    # "KZJ",    
+    # "RDM",    
+    # "SKZR",   
+    # "BPQ",    
     "NGP",    
     "ET",     
     "BPL",    
-    "VGLJ",   
-    "GWL",    
-    "AGC",    
-    "HZM"  
+    # "VGLJ",   
+    # "GWL",    
+    # "AGC",    
+    # "HZM"  
 ]
 
 
