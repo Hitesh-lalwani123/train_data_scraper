@@ -4,12 +4,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import re
+
+
 options = Options()
-options.add_argument('--headless=new')  # Better headless mode
-options.add_argument('--disable-gpu')
-options.add_argument('--no-sandbox')
-options.add_argument('--window-size=1920,1080')
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
+# options.add_argument('--headless=new')  # Better headless mode
+# options.add_argument('--disable-gpu')
+# options.add_argument('--no-sandbox')
+# options.add_argument('--window-size=1920,1080')
+# options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
 from scraper_app.db.db_connection import create_connection,insert_data,close_connection,clear_entry,update_progress
 import time
 from scraper_app.utils.constants import stations,FARE_CLASS,dates
@@ -20,6 +22,7 @@ if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
 
 def run_scraper(date_list = dates):
+    print("scraping started")
     try:
         client = create_connection()
         driver = webdriver.Chrome(options=options)
