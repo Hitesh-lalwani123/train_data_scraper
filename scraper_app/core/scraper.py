@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-import json
 import re
 options = Options()
 options.add_argument('--headless=new')  # Better headless mode
@@ -11,30 +10,13 @@ options.add_argument('--disable-gpu')
 options.add_argument('--no-sandbox')
 options.add_argument('--window-size=1920,1080')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
-from source_code.db.db_connection import create_connection,insert_data,close_connection,clear_entry,update_progress
-import tkinter as tk
+from scraper_app.db.db_connection import create_connection,insert_data,close_connection,clear_entry,update_progress
 import time
-from source_code.utils.constants import stations,FARE_CLASS,dates
-from source_code.utils.util import expected_time
+from scraper_app.utils.constants import stations,FARE_CLASS,dates
+from scraper_app.utils.util import expected_time,is_irctc_under_maintainance
+from scraper_app import SCRAPER_URL
 
-
-def is_time_between_1145pm_and_1215am_ist():
-    from datetime import datetime, time, timedelta
-    import pytz
-    # Get current time in IST
-    ist = pytz.timezone("Asia/Kolkata")
-    now_ist = datetime.now(ist).time()
-
-    # Define start and end time
-    start_time = time(23, 45)  # 11:45 PM
-    end_time = time(0, 15)     # 12:15 AM
-
-    # Handle the wrap-around midnight case
-    if start_time <= now_ist or now_ist <= end_time:
-        return True
-    return False
-
-if(is_time_between_1145pm_and_1215am_ist()):
+if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
     exit(1)
 
@@ -49,9 +31,11 @@ def run_scraper(date_list = dates):
         if(from_station == to_station):
             return []
         try:
-            driver.get(f"https://www.confirmtkt.com/rbooking/trains/from/{from_station}/to/{to_station}/{date}")
+            driver.get(SCRAPER_URL.format(from_station=from_station, to_station=to_station,date=date))
             wait = WebDriverWait(driver, 15)
-            time.sleep(5)
+            wait.until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(@id, 'train-')]"))
+            )
             elements = driver.find_elements(By.XPATH, "//*[contains(@id, 'train-')]")
             result = []
             for val in elements:
@@ -108,6 +92,8 @@ def run_scraper(date_list = dates):
     print("total time: ", (total_calls*8)/60)
     completion_time = expected_time((total_calls*8)/60)
     print("Expected completion time: ",completion_time)
+    driver.get(SCRAPER_URL.format(from_station="NGP", to_station="BPL",date="26-06-2025"))
+    time.sleep(2)
     for curr_date in date_list:
         train_data = {}
         for p1 in range(len(stations)):
@@ -116,7 +102,10 @@ def run_scraper(date_list = dates):
                     continue
                 try:
                     trains = get_train_info(stations[p1],stations[p2],date=curr_date)
-                    time.sleep(2)
+                    # time.sleep(2)
+                    print(stations[p1],stations[p2])
+                    print(trains)
+                   
                     result_list = generate_data(trains)
                     percent = (((records_processed + 1) / total_calls) * 100)
                     records_processed += 1
@@ -129,21 +118,23 @@ def run_scraper(date_list = dates):
                     for train in result_list:
                         train_number = train['train_number']
                         data = train['data']
-                        from_st = train['from']
-                        to_st = train['to']
+                        actual_from_st = train['from']
+                        actual_to_st = train['to']
+                        searched_from_st = stations[p1]
+                        searched_to_st = stations[p2]
                         if train_number in train_data:
-                            train_data[train_number][f"{from_st}-{to_st}"] = data
+                            train_data[train_number][f"{searched_from_st}-{searched_to_st},{actual_from_st}-{actual_to_st}"] = data
                         else:
                             train_data[train_number]= {}
-                            train_data[train_number][f"{from_st}-{to_st}"] = data
+                            train_data[train_number][f"{searched_from_st}-{searched_to_st},{actual_from_st}-{actual_to_st}"] = data
                 except Exception as e:
                     raise e
         try:       
             data = {curr_date: train_data}
-            print("error in db")
             deleted_date= clear_entry(client,curr_date)
-            
+            print(deleted_date)
             object_id = insert_data(data,client)
+            print(object_id)
         except Exception as e:
             raise e
     close_connection(client=client)

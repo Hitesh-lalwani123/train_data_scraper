@@ -1,7 +1,7 @@
 from fastapi import FastAPI,BackgroundTasks
 app = FastAPI()
-from source_code.core.scraper import run_scraper
-from source_code.db.db_connection import get_progress,create_connection,close_connection
+from scraper_app.core.scraper import run_scraper
+from scraper_app.db.db_connection import get_progress,create_connection,close_connection
 @app.post("/scrape-data")
 def get_train_data(date: list[str],background_tasks: BackgroundTasks):
     background_tasks.add_task(run_scraper, date)
