@@ -15,7 +15,7 @@ if [[ ! -d $STORAGE_DIR/chrome ]]; then
 else
   echo "...Using Chrome from cache"
 fi
-export PATH="/opt/render/project/.render/chrome/opt/google/chrome:$PATH"
+export PATH="${PATH}:/opt/render/project/.render/chrome/opt/google/chrome"
 
 #requirements
 pip install -r requirements.txt
