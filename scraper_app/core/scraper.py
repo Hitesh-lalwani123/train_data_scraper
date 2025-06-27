@@ -22,12 +22,11 @@ from scraper_app import SCRAPER_URL
 
 if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
-s = Service(ChromeDriverManager().install())
 def run_scraper(date_list = dates):
     print("scraping started")
     try:
         client = create_connection()
-        driver = webdriver.Chrome(options=options,service=s)
+        driver = webdriver.Chrome(options=options)
     except Exception as e:
         raise e
 
