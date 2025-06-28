@@ -23,7 +23,9 @@ from scraper_app import SCRAPER_URL
 
 if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
-def run_scraper(date_list = dates):
+
+
+def run_scraper(correlation_id,date_list = dates):
     print("scraping started")
     try:
         client = create_connection()
@@ -115,7 +117,7 @@ def run_scraper(date_list = dates):
                     records_processed += 1
                     print("Progress: ",percent)
                     try:
-                        update_progress(client,percent)
+                        update_progress(client,percent,correlation_id)
                     except Exception as e:
                         raise e
                 
@@ -137,7 +139,7 @@ def run_scraper(date_list = dates):
             data = {curr_date: train_data}
             deleted_date= clear_entry(client,curr_date)
             print(deleted_date)
-            object_id = insert_data(data,client)
+            object_id = insert_data(data,client,correlation_id)
             print(object_id)
         except Exception as e:
             raise e

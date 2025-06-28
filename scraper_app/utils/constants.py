@@ -1,8 +1,8 @@
 
 stations = [
-    # "SBC",  
-    # "RC",  
-    # "GTL",    
+    "SBC",  
+    "RC",  
+    "GTL",    
     # "DHNE",   
     # "KRNT",   
     # "YG",     

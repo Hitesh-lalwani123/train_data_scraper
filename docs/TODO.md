@@ -31,3 +31,4 @@
 ### Phase 2
 1. Try to get if travel gurantee provided that also take even if waitlisted.
 2. Optimize the time taken to scrape data.
+3. Update db progress (currently using first delete progress and then insert new -> update to update query instead of delete and then insert)

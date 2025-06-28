@@ -18,10 +18,11 @@ def create_connection():
 
 
 # Insert data
-def insert_data(data,client):
+def insert_data(data,client,correlation_id):
     db = client['train_data']
     collection = db['train_data']
     data['updated_at'] = datetime.now()
+    data['correlation_id'] = correlation_id
     result = collection.insert_one(data)
     print(f"Inserted document ID: {result.inserted_id}")
     return result.inserted_id
@@ -43,18 +44,19 @@ def clear_entry(client,date):
     result = collection.delete_many({date: {"$exists": True}})
     return result
 
-def update_progress(client,value):
+def update_progress(client,value,correlation_id):
     db = client['train_data']
     collection = db['progress']
     collection.delete_many({})
-    id = collection.insert_one({"progress":value})
+    id = collection.insert_one({"correlation_id":correlation_id,"progress":value})
     return id
 
-def get_progress(client):
+def get_progress(client,correlation_id):
     db = client['train_data']
     collection = db['progress']
     try:
-        result = collection.find({"progress": {"$exists": True}})
+        query = {"correlation_id":correlation_id}
+        result = collection.find(query)
         for doc in result:
             for key in doc.keys():
                 if(key == "progress"):

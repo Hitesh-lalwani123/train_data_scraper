@@ -10,8 +10,7 @@ def expected_time(time_exp):
 
 
 def is_irctc_under_maintainance():
-    from datetime import datetime, time, timedelta
-    import pytz
+    
     # Get current time in IST
     ist = pytz.timezone("Asia/Kolkata")
     now_ist = datetime.now(ist).time()
@@ -24,3 +23,11 @@ def is_irctc_under_maintainance():
     if start_time <= now_ist or now_ist <= end_time:
         return True
     return False
+
+def generate_correlation_id():
+    ist = pytz.timezone("Asia/Kolkata")
+    now_ist = datetime.now(ist).time()
+    time_str = str(now_ist)
+    correlation_id_list = time_str.split('.')[0].split(':')
+    correlation_id = "CORR"+"".join(correlation_id_list)
+    return correlation_id
