@@ -1,3 +1,4 @@
+
 stations = [
     # "SBC",  
     # "RC",  
@@ -7,16 +8,16 @@ stations = [
     # "YG",     
     "MBNR",   
     "SEM",    
-    "SC",     
+    # "SC",     
     # "KZJ",    
     # "RDM",    
     # "SKZR",   
     # "BPQ",    
-    "NGP",    
-    "ET",     
+    # "NGP",    
+    # "ET",     
     "BPL",    
-    # "VGLJ",   
-    # "GWL",    
+    "VGLJ",   
+    "GWL",    
     # "AGC",    
     # "HZM"  
 ]

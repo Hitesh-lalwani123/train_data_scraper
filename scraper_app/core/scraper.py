@@ -6,14 +6,15 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import re
-
-
 options = Options()
-options.add_argument('--headless=new')  # Better headless mode
-options.add_argument('--disable-gpu')
+options.add_argument("start-maximized")
+options.add_argument("disable-infobars")
+options.add_argument("--disable-extensions")
 options.add_argument('--no-sandbox')
-options.add_argument('--window-size=1920,1080')
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
+options.add_argument('--disable-application-cache')
+options.add_argument('--disable-gpu')
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument('--headless=new') 
 from scraper_app.db.db_connection import create_connection,insert_data,close_connection,clear_entry,update_progress
 import time
 from scraper_app.utils.constants import stations,FARE_CLASS,dates
@@ -28,7 +29,8 @@ def run_scraper(date_list = dates):
         client = create_connection()
         driver = webdriver.Chrome(options=options)
     except Exception as e:
-        raise e
+        raise "error with driver/db connection"
+        
 
     def get_train_info(from_station: str, to_station: str,date: str):
         if(from_station == to_station):
@@ -39,6 +41,7 @@ def run_scraper(date_list = dates):
             wait.until(
                 EC.presence_of_element_located((By.XPATH, "//*[contains(@id, 'train-')]"))
             )
+            time.sleep(1)
             elements = driver.find_elements(By.XPATH, "//*[contains(@id, 'train-')]")
             result = []
             for val in elements:
@@ -50,7 +53,7 @@ def run_scraper(date_list = dates):
             else: 
                 return []
         except Exception as e:
-            raise e
+            raise "error getting info from confticket"
         
     def generate_data(trains) -> list:
         results =[]
@@ -95,8 +98,8 @@ def run_scraper(date_list = dates):
     print("total time: ", (total_calls*8)/60)
     completion_time = expected_time((total_calls*8)/60)
     print("Expected completion time: ",completion_time)
-    driver.get(SCRAPER_URL.format(from_station="NGP", to_station="BPL",date="26-06-2025"))
-    time.sleep(2)
+    # driver.get(SCRAPER_URL.format(from_station="NGP", to_station="BPL",date="26-06-2025"))
+    # time.sleep(2)
     for curr_date in date_list:
         train_data = {}
         for p1 in range(len(stations)):
@@ -141,7 +144,7 @@ def run_scraper(date_list = dates):
     close_connection(client=client)
         
     driver.quit()
-
+    return "data inserted to db"
 # run_scraper()
 
 
