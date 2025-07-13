@@ -27,6 +27,8 @@
         },
     }}```
 
+2. convert get-progress api to get (currently post) and deploy it on render.
+3. Change api's route to "api/v1/api-name"
     
 ### Phase 2
 1. Try to get if travel gurantee provided that also take even if waitlisted.

@@ -1,0 +1,4 @@
+['17212Kondaveedu Exp', '4.2', '13:15 YPR', '6h 23m', '19:38 GY', 'Schedule', '2 hrs ago', 'SL', '₹195', 'RAC 40', 'Available', '12 hrs ago', '3A', '₹505', 'AVL 213', 'Available', '10 hrs ago', '2A', '₹710', 'AVL 17', 'Available', '12 hrs ago', '1A', '₹1175', 'AVL 2', 'Available']
+
+
+[[['SBC', 'MBNR'], ['SBC', 'SEM'], ['SBC', 'SC']], [['SBC', 'NGP'], ['SBC', 'BPL'], ['MBNR', 'SBC']], [['MBNR', 'SEM'], ['MBNR', 'SC'], ['MBNR', 'NGP']], [['MBNR', 'BPL'], ['SEM', 'SBC'], ['SEM', 'MBNR']], [['SEM', 'SC'], ['SEM', 'NGP'], ['SEM', 'BPL']], [['SC', 'SBC'], ['SC', 'MBNR'], ['SC', 'SEM']], [['SC', 'NGP'], ['SC', 'BPL'], ['NGP', 'SBC']], [['NGP', 'MBNR'], ['NGP', 'SEM'], ['NGP', 'SC']], [['NGP', 'BPL'], ['BPL', 'SBC'], ['BPL', 'MBNR']], [['BPL', 'SEM'], ['BPL', 'SC'], ['BPL', 'NGP']]]

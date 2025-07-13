@@ -44,12 +44,15 @@ def clear_entry(client,date):
     result = collection.delete_many({date: {"$exists": True}})
     return result
 
-def update_progress(client,value,correlation_id):
+def update_progress(client, value, correlation_id):
     db = client['train_data']
     collection = db['progress']
-    collection.delete_many({})
-    id = collection.insert_one({"correlation_id":correlation_id,"progress":value})
-    return id
+    
+    result = collection.update_one(
+        {"correlation_id": correlation_id},
+        {"$set": {"progress": value}},
+        upsert=True  # This will insert a new document if no match is found
+    )
 
 def get_progress(client,correlation_id):
     db = client['train_data']
