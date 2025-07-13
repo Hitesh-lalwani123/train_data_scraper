@@ -21,9 +21,20 @@ from scraper_app.utils.constants import stations,FARE_CLASS,dates
 from scraper_app.utils.util import expected_time,is_irctc_under_maintainance
 from scraper_app import SCRAPER_URL
 
+
 if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
 
+# def batch_list(data, batch_size=10):
+#     return [data[i:i + batch_size] for i in range(0, len(data), batch_size)]
+def generate_station_pairs():
+    pairs= []
+    for p1 in stations:
+        for p2 in stations:
+            if p1 == p2:
+                continue
+            else:
+                pairs.append([p1,p2])
 
 def run_scraper(correlation_id,date_list = dates):
     print("scraping started")
@@ -102,6 +113,10 @@ def run_scraper(correlation_id,date_list = dates):
     print("Expected completion time: ",completion_time)
     # driver.get(SCRAPER_URL.format(from_station="NGP", to_station="BPL",date="26-06-2025"))
     # time.sleep(2)
+
+    # batch_list = batch_list(date_list)
+    
+
     for curr_date in date_list:
         train_data = {}
         for p1 in range(len(stations)):
@@ -146,7 +161,7 @@ def run_scraper(correlation_id,date_list = dates):
     close_connection(client=client)
         
     driver.quit()
-    return "data inserted to db"
+    return f"data inserted to db for date: {date_list[0]}"
 # run_scraper()
 
 
