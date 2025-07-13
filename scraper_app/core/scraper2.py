@@ -13,10 +13,7 @@ from scraper_app.utils.util import expected_time,is_irctc_under_maintainance
 from scraper_app import SCRAPER_URL
 from scraper_app.core.generate_batch_urls import generate_batch
 PROXIES = [
-    "http://4.156.78.45:80",
-    "http://123.140.146.45:5031",
-    "http://23.247.136.248:80",
-    "http://123.140.146.2:5031",
+    "118.68.64.134:16000"
     ]
 import random
 
@@ -25,7 +22,7 @@ if(is_irctc_under_maintainance()):
     print("Irctc under maintainance currently")
 
 
-def get_driver(proxy):
+def get_driver(proxy=None):
     chrome_options = Options()
     chrome_options.add_argument("start-maximized")
     chrome_options.add_argument("disable-infobars")
@@ -33,14 +30,37 @@ def get_driver(proxy):
     chrome_options.add_argument('--disable-application-cache')
     chrome_options.add_argument('--disable-gpu')
     # chrome_options.add_argument('--headless=new') 
-    chrome_options.add_argument(f'--proxy-server={proxy}')
+    if proxy:
+        chrome_options.add_argument(f'--proxy-server={proxy}')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
+    
+    # Basic stealth chrome_options
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    # Pretend to be a real user
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36")
+
+    # Disable extensions, pop-ups, and infobars
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-popup-blocking")
+    chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument("--disable-infobars")
+    
+
+
+    # Languages and platform to match real users
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     # chrome_options.add_argument(
     #     '--disable-blink-features=AutomationControlled')
-    # chrome_options.add_experimental_option(
-    #     "excludeSwitches", ["enable-automation"])
-    # chrome_options.add_experimental_option('useAutomationExtension', False)
+    chrome_options.add_experimental_option(
+        "excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option('useAutomationExtension', False)
 
     driver = webdriver.Chrome(options=chrome_options)
     return driver
@@ -53,6 +73,13 @@ def run_scraper(correlation_id,date):
             proxy = random.choice(PROXIES)
             print(proxy)
             driver = get_driver(proxy)
+            driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+            "source": """
+                Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+                })
+            """
+            })
             time.sleep(1)
             driver.get(url)
             print("started scraping for ",url)
@@ -124,7 +151,7 @@ def run_scraper(correlation_id,date):
     import time
     from concurrent.futures import ThreadPoolExecutor
     try:
-        with ThreadPoolExecutor(max_workers=2) as executor:
+        with ThreadPoolExecutor(max_workers=1) as executor:
             results = list(executor.map(get_train_info,URLS))
         print(len(results))
         print(type(results))
